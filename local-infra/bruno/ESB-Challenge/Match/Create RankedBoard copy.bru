@@ -1,0 +1,27 @@
+meta {
+  name: Create RankedBoard copy
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BaseUrl}}/api/v1/match
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "rankedBoardId": "3fecffa7-0eb6-482f-83f4-4cc52c8f5d41",
+    "PlayerScores": [
+      {
+        "playerId": "1fecffa7-0eb6-482f-83f4-4cc52c8f5d41",
+        "score": 100
+      },
+      {
+        "playerId": "2fecffa7-0eb6-482f-83f4-4cc52c8f5d41",
+        "score": 75
+      }
+    ]
+  }
+}

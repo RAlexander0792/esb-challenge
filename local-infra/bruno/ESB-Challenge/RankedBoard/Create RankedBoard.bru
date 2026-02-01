@@ -1,0 +1,17 @@
+meta {
+  name: Create RankedBoard
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BaseUrl}}/api/v1/rankedBoard
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Ranked Board 1"
+  }
+}

@@ -83,4 +83,4 @@ A total of around 34 hours were invested
 
 ### AI agents
 With the intention of measuring only my baseline, no integrated coding agents were used for this development.
-AI Chatbots were used for research, consulting and troubleshooting.
+AI Chatbots were used for research, consulting, troubleshooting and text rephrasing.

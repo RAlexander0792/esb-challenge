@@ -3,6 +3,7 @@ using Mgls.Application.Services.RatingResolvers;
 using Mgls.Benchmarks.Charters;
 using Mgls.Benchmarks.EntityBuilders;
 using Mgls.Domain.Entities;
+using Spectre.Console;
 
 namespace Mgls.Benchmarks.Resolvers;
 
@@ -85,9 +86,13 @@ public class ClassicEloResolverBench
             }
 
         }
-        RatingCharter.SaveEloLinesHtml(allChanges, "eloLines.html", matches);
-
-        RatingCharter.SaveEloDistributionHtml(playerPool, "distribution.html");
+        var linesHtml = "eloLines.html";
+        RatingCharter.SaveEloLinesHtml(allChanges, linesHtml, matches);
+        AnsiConsole.WriteLine($"Chart created at {Path.Combine(Directory.GetCurrentDirectory(), linesHtml)}");
+        var distribution = "distribution.html";
+        RatingCharter.SaveEloDistributionHtml(playerPool, distribution);
+        AnsiConsole.WriteLine($"Chart created at {Path.Combine(Directory.GetCurrentDirectory(), distribution)}");
+        AnsiConsole.Prompt(new TextPrompt<int>("Input any number to continue"));
 
     }
 

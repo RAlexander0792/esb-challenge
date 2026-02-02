@@ -12,18 +12,21 @@ public class LeaderboardService : ILeaderboardService
     private readonly IPlayerRepository _playerRepository;
     private readonly IMatchRepository _matchRepository;
     private readonly IRatingRulesetRepository _ratingRulesetRepository;
+    private readonly ISortedLeaderboardService _sortedLeaderboardService;
 
     public LeaderboardService(ILeaderboardRepository leaderboardRepository,
                               ILeaderboardPlayerRepository leaderboardPlayerRepository,
                               IPlayerRepository playerRepository,
                               IMatchRepository matchRepository,
-                              IRatingRulesetRepository ratingRulesetRepository)
+                              IRatingRulesetRepository ratingRulesetRepository,
+                              ISortedLeaderboardService sortedLeaderboardService)
     {
         _leaderboardRepository = leaderboardRepository;
         _leaderboardPlayerRepository = leaderboardPlayerRepository;
         _playerRepository = playerRepository;
         _matchRepository = matchRepository;
         _ratingRulesetRepository = ratingRulesetRepository;
+        _sortedLeaderboardService = sortedLeaderboardService;
     }
 
     public async Task<Leaderboard> CreateLeaderboard(CreateLeaderboardDto leaderboard, CancellationToken ct)
@@ -81,9 +84,39 @@ public class LeaderboardService : ILeaderboardService
         return await _leaderboardRepository.GetLeaderboards(ct);
     }
 
-    public Task<List<LeaderboardPlayer>> GetTopPlayers(Guid leaderboardId, int limit, CancellationToken ct)
+    public async Task<LeaderboardTopPlayersDto> GetTopPlayers(Guid leaderboardId, int skip = 0, int take = 100)
     {
-        return _leaderboardPlayerRepository.GetTopPlayers(leaderboardId, limit, ct);
+        LeaderboardTopPlayersDto response = new LeaderboardTopPlayersDto();
+        response.LeaderboardId = leaderboardId;
+        response.Skip = skip;
+        response.Take = take;
+
+        var topPlayers = await _sortedLeaderboardService.GetTopPlayerLeadboardStats(leaderboardId, skip, take);
+        var pagePlayersIds = topPlayers.Select(x => x.PlayerId);
+        
+        var leaderboardPlayersTask = _leaderboardPlayerRepository.GetByPlayerIds(leaderboardId, pagePlayersIds);
+        var playersTask =  _playerRepository.GetByIds(pagePlayersIds);
+
+        await Task.WhenAll(leaderboardPlayersTask, playersTask);
+        
+        foreach (var player in topPlayers)
+        {
+            var newPlayer = new LeaderboardPlayerProfile();
+            
+            var leaderboardPlayer = leaderboardPlayersTask.Result.FirstOrDefault(x => x.Id.PlayerId == player.PlayerId);
+            var playerName = playersTask.Result.FirstOrDefault(x => x.Id == player.PlayerId);
+
+            newPlayer.Wins = leaderboardPlayer.Wins;
+            newPlayer.PlayerId = player.PlayerId;
+            newPlayer.Rating = player.Rating;
+            newPlayer.Position = player.Position;
+            newPlayer.Losses = leaderboardPlayer.Losses;
+            newPlayer.Streak = leaderboardPlayer.Streak;
+            newPlayer.PlayerName = playerName.DisplayName;
+
+            response.Players.Add(newPlayer);
+        }
+        return response;
     }
 
     public async Task<LeaderboardPlayer> InitializeLeaderboardPlayer(Guid leaderboardId, Guid nonLeaderboardPlayer, CancellationToken ct)

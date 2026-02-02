@@ -18,7 +18,7 @@ public static class DependencyManager
 
         IConfiguration configuration = new ConfigurationBuilder()
           .SetBasePath(Directory.GetCurrentDirectory())
-          .AddJsonFile("appSettings.json", false)
+          .AddJsonFile("appsettings.json", false)
           .Build();
 
         serviceCollection.AddSingleton<IConfiguration>(configuration);

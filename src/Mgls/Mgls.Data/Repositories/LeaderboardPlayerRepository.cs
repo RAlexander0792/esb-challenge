@@ -23,6 +23,12 @@ internal class LeaderboardPlayerRepository : ILeaderboardPlayerRepository
         return await _leaderboardPlayers.Find(filter).ToListAsync(ct);
     }
 
+    public async Task<List<LeaderboardPlayer>> GetByPlayerIds(Guid leaderboardId, IEnumerable<Guid> pagePlayersIds)
+    {
+        var filter = Builders<LeaderboardPlayer>.Filter.Where(x => x.Id.LeaderboardId == leaderboardId && pagePlayersIds.Contains(x.Id.PlayerId));
+        return await _leaderboardPlayers.Find(filter).ToListAsync();
+    }
+
     public async Task<List<LeaderboardPlayer>> GetTopPlayers(Guid leaderboardId, int limit, CancellationToken ct)
     {
         var filter = Builders<LeaderboardPlayer>.Filter.Eq(x => x.Id.LeaderboardId, leaderboardId);

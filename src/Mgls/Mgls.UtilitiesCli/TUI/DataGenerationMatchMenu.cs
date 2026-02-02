@@ -8,7 +8,7 @@ namespace Mgls.UtilitiesCli.TUI;
 enum DataGenerationMatchMenuOptions
 {
     OneMatch,
-    Continous,
+    Continuous,
     Exit
 }
 
@@ -31,8 +31,8 @@ public class DataGenerationMatchMenu
                 case DataGenerationMatchMenuOptions.OneMatch:
                     await HandleGenerateOne();
                     break;
-                case DataGenerationMatchMenuOptions.Continous:
-                    await HandleGenerateContinous();
+                case DataGenerationMatchMenuOptions.Continuous:
+                    await HandleGenerateContinuous();
                     break;
 
                 case DataGenerationMatchMenuOptions.Exit:
@@ -57,7 +57,7 @@ public class DataGenerationMatchMenu
         return choice;
     }
 
-    private static async Task HandleGenerateContinous()
+    private static async Task HandleGenerateContinuous()
     {
         MatchGenerator generator = await CreateMatchGeneratorPrompt();
         int delayInMS = SelectDelayInMS();

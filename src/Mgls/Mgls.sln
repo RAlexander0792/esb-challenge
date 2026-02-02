@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mgls.Tests.Integration", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mgls.Data", "Mgls.Data\Mgls.Data.csproj", "{D6639685-A98E-4C67-8234-E169718F1004}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mgls.UtilitiesCli", "Mgls.Benchmarks\Mgls.UtilitiesCli.csproj", "{885F332B-24FC-4475-A05C-641F01859095}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mgls.UtilitiesCli", "Mgls.UtilitiesCli\Mgls.UtilitiesCli.csproj", "{885F332B-24FC-4475-A05C-641F01859095}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

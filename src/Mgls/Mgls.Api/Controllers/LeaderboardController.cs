@@ -49,11 +49,11 @@ public class LeaderboardController : BaseAPIController
     }
 
     [HttpGet("{leaderboardId}/player/top")]
-    public async Task<IActionResult> GetTopPlayers([FromRoute]Guid leaderboardId, CancellationToken ct, [FromQuery]int limit = 100)
+    public async Task<IActionResult> GetTopPlayers([FromRoute]Guid leaderboardId, CancellationToken ct, [FromQuery] int skip = 0, [FromQuery]int limit = 100)
     {
         try
         {
-            var players = await _leaderboardService.GetTopPlayers(leaderboardId, limit, ct);
+            var players = await _leaderboardService.GetTopPlayers(leaderboardId, skip,limit);
 
             return Ok(players);
         }

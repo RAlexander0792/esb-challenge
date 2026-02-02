@@ -37,36 +37,27 @@ public class SortedLeaderboardService : ISortedLeaderboardService
         return zeroBased.HasValue ? zeroBased.Value + 1 : null;
     }
 
-    public async Task<IReadOnlyList<PlayerLeaderboardRankDto>> GetTopAsync(Guid leaderboardId, int count, CancellationToken ct = default)
+    public async Task<List<PlayerLeaderboardRankDto>> GetTopPlayerLeadboardStats(Guid leaderboardId, int skip, int take)
     {
-        if (count <= 0) return Array.Empty<PlayerLeaderboardRankDto>();
+        if (take <= 0) return Array.Empty<PlayerLeaderboardRankDto>().ToList();
 
         var entries = await Db.SortedSetRangeByRankWithScoresAsync(
             Key(leaderboardId),
-            start: 0,
-            stop: count - 1,
+            start: skip,
+            stop: take - 1,
             order: Order.Descending);
 
         var result = new List<PlayerLeaderboardRankDto>(entries.Length);
+        var i = 1;
         foreach (var e in entries)
         {
             if (!e.Element.HasValue) continue;
             if (!Guid.TryParseExact(e.Element.ToString(), "N", out var playerId)) continue;
-            result.Add(new PlayerLeaderboardRankDto() { PlayerId = playerId, Position = (int)e.Score  });
+            result.Add(new PlayerLeaderboardRankDto() { PlayerId = playerId, Rating = (int)e.Score, Position = skip + i });
+            i++;
         }
 
         return result;
-    }
-
-
-    public Task<PlayerLeaderboardStatsDto> GetPlayerLeaderboardStats(CancellationToken ct)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<PlayerLeaderboardStatsDto>> GetTopPlayerLeadboardStats(CancellationToken ct)
-    {
-        throw new NotImplementedException();
     }
     
 }

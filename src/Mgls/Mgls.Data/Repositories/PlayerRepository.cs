@@ -27,4 +27,9 @@ internal class PlayerRepository : IPlayerRepository
         return await _players.Find(_ => true).Limit(quantity).ToListAsync(ct);
     }
 
+    public async Task<List<Player>> GetByIds(IEnumerable<Guid> playerIds)
+    {
+        var filter = Builders<Player>.Filter.In(x => x.Id, playerIds);
+        return await _players.Find(filter).ToListAsync();
+    }
 }

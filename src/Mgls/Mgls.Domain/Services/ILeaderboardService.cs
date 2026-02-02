@@ -11,7 +11,7 @@ public interface ILeaderboardService
     Task<List<LeaderboardPlayer>> GetLeaderboardPlayers(Guid leaderboardId, IEnumerable<Guid> playerIds, CancellationToken ct);
     Task<RatingRuleset> GetLeaderboardRatingRuleset(Guid leaderboardId);
     Task<List<Leaderboard>> GetLeaderboards(CancellationToken ct);
-    Task<List<LeaderboardPlayer>> GetTopPlayers(Guid leaderboardId, int limit, CancellationToken ct);
+    Task<LeaderboardTopPlayersDto> GetTopPlayers(Guid leaderboardId, int skip, int limit);
     Task<LeaderboardPlayer> InitializeLeaderboardPlayer(Guid leaderboardId, Guid playerId, CancellationToken ct);
     Task UpdateLeaderboardPlayerFromAudit(LeaderboardPlayerRatingAudit record, LeaderboardPlayer leaderboardPlayer, CancellationToken ct);
 }

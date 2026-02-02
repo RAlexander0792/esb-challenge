@@ -57,7 +57,7 @@ public class RatingRulesetController : BaseAPIController
     {
         try
         {
-            if (!_resolvers.Any(x => x.Name == request.Name))
+            if (!_resolvers.Any(x => x.Name == request.Resolver))
                 return BadRequest("Invalid Resolver");
 
             var ratingRuleset = await _ratingRulesetService.Create(request);

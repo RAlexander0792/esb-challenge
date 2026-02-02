@@ -9,4 +9,5 @@ public interface ILeaderboardPlayerRepository
     Task UpdateLeaderboardPlayer(LeaderboardPlayer doc, CancellationToken ct);
     Task InsertAsync(LeaderboardPlayer doc, CancellationToken ct);
     Task<List<LeaderboardPlayer>> GetByPlayerId(Guid playerId, CancellationToken ct);
+    Task<List<LeaderboardPlayer>> GetByPlayerIds(Guid leaderboardId, IEnumerable<Guid> pagePlayersIds);
 }

@@ -1,0 +1,23 @@
+meta {
+  name: Get Rating Ruleset
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BaseUrl}}/api/v1/ratingruleset/:ratingRulesetId
+  body: json
+  auth: inherit
+}
+
+params:path {
+  ratingRulesetId: 0c05b106-41b8-4ce8-979e-3be3f10eb85f
+}
+
+body:json {
+  {
+    "name": "ELO 2 Player - High Swing",
+    "k": 45,
+    "tau": 400
+  }
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Get Match History
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BaseUrl}}/api/v1/player/:playerId/match/history
+  body: none
+  auth: inherit
+}
+
+params:path {
+  playerId: 3af474f53bba4273a0c33c3945717804
+}

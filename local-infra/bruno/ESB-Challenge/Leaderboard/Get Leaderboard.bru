@@ -1,0 +1,23 @@
+meta {
+  name: Get Leaderboard
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BaseUrl}}/api/v1/leaderboard/:leaderboardId
+  body: json
+  auth: inherit
+}
+
+params:path {
+  leaderboardId: c697f7ab-1b22-4d53-9a27-a5c0262499af
+}
+
+body:json {
+  {
+    "name": "Leaderboard 1",
+    "description": "Base board for testing",
+    "ratingRulesetId": "0c05b106-41b8-4ce8-979e-3be3f10eb85f"
+  }
+}

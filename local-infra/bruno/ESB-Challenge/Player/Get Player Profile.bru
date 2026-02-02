@@ -1,0 +1,15 @@
+meta {
+  name: Get Player Profile
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BaseUrl}}/api/v1/player/:playerId/profile
+  body: none
+  auth: inherit
+}
+
+params:path {
+  playerId: 3af474f53bba4273a0c33c3945717804
+}

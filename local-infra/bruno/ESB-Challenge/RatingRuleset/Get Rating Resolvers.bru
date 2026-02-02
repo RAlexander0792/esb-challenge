@@ -1,0 +1,19 @@
+meta {
+  name: Get Rating Resolvers
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BaseUrl}}/api/v1/ratingruleset/resolvers
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "ELO 2 Player - High Swing",
+    "k": 45,
+    "tau": 400
+  }
+}

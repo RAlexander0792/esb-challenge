@@ -1,0 +1,15 @@
+meta {
+  name: Get Top Players of Ranked Board
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BaseUrl}}/api/v1/leaderboard/:leaderboardId/player/top
+  body: none
+  auth: inherit
+}
+
+params:path {
+  leaderboardId: c697f7ab-1b22-4d53-9a27-a5c0262499af
+}

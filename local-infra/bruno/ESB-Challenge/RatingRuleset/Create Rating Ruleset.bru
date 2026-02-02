@@ -1,0 +1,19 @@
+meta {
+  name: Create Rating Ruleset
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BaseUrl}}/api/v1/ratingruleset
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "ELO 2 Player - High Swing",
+    "k": 45,
+    "tau": 400
+  }
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Get Leaderboard Match History
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{BaseUrl}}/api/v1/leaderboard/:leaderboardId/match/history
+  body: none
+  auth: inherit
+}
+
+params:path {
+  leaderboardId: 3afd5f81-8bd1-4627-9e8b-69d40e26c9d3
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Create Match Result
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BaseUrl}}/api/v1/match/result
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "leaderboardId": "c697f7ab-1b22-4d53-9a27-a5c0262499af",
+    "PlayerScores": [
+      {
+        "playerId": "f4339477-c8b2-46ce-bc3c-efe7f095beb1",
+        "score": 60
+      },
+      {
+        "playerId": "fd74588a-16c8-4b8d-b6d0-6ddbfd62042e",
+        "score": 75
+      }
+    ]
+  }
+}

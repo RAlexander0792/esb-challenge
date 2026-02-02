@@ -2,7 +2,7 @@
 
 
 ## Data model for players, matches, and rankings
-Class diagram available at docs\class-diagram.svg
+Class diagram available at [docs\class-diagram.svg](class-diagram.svg)
 
 ## Ranking algorithm explanation and rationale
 There are 2 Player Rating algorithms implemented.

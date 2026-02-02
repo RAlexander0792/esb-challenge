@@ -2,6 +2,9 @@
 
 The solution name is Mgls -> Multiplayer Game Leaderboard System
 
+[Tech doc](./docs/technical-document.md)
+
+
 
 ### Local solution setup
 In "/local-infra" there is a docker-compose.yml file with a MongoDB and Redis databases.

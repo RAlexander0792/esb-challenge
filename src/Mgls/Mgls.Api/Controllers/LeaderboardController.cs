@@ -10,11 +10,14 @@ namespace Mgls.API.Controllers;
 public class LeaderboardController : BaseAPIController
 {
     private readonly ILeaderboardService _leaderboardService;
+    private readonly ISortedLeaderboardService _sortedLeaderboardService;
 
 
-    public LeaderboardController(ILeaderboardService leaderboardService)
+    public LeaderboardController(ILeaderboardService leaderboardService,
+                                 ISortedLeaderboardService sortedLeaderboardService)
     {
         _leaderboardService = leaderboardService;
+        _sortedLeaderboardService = sortedLeaderboardService;
     }
 
     [HttpGet("{leaderboardId}")]
@@ -84,5 +87,12 @@ public class LeaderboardController : BaseAPIController
             }
             return StatusCode(500, ex.Message);
         }
+    }
+
+    [HttpPost("{leaderboardId}/load-cache")]
+    public async Task<IActionResult> LoadLeaderboardPlayerCache([FromRoute] Guid leaderboardId)
+    {
+        await _sortedLeaderboardService.RebuildLeaderboardCacheAsync(leaderboardId);
+        return Ok();
     }
 }

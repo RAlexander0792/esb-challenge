@@ -1,7 +1,9 @@
-﻿using Mgls.Domain.Services;
+﻿using Mgls.Domain.Entities;
+using Mgls.Domain.Services;
 using Mgls.Domain.Services.Dtos;
 using Mgls.Shared;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using StackExchange.Redis;
 
 namespace Mgls.Application.Services;
@@ -10,11 +12,15 @@ public class SortedLeaderboardService : ISortedLeaderboardService
 {
     private readonly IConnectionMultiplexer _mux;
     private readonly RedisOptions _opt;
+    private readonly IMongoCollection<LeaderboardPlayer> _leaderboardPlayers;
 
-    public SortedLeaderboardService(IConnectionMultiplexer mux, IOptions<OptionsContext> opt)
+    public SortedLeaderboardService(IConnectionMultiplexer mux,
+                                    IOptions<OptionsContext> opt,
+                                    IMongoCollection<LeaderboardPlayer> leaderboardPlayers)
     {
         _mux = mux;
         _opt = opt.Value.Redis;
+        _leaderboardPlayers = leaderboardPlayers;
     }
 
     private IDatabase Db => _mux.GetDatabase();
@@ -59,5 +65,64 @@ public class SortedLeaderboardService : ISortedLeaderboardService
 
         return result;
     }
-    
+
+    public async Task RebuildLeaderboardCacheAsync(Guid boardId, CancellationToken ct = default)
+    {
+        var key = Key(boardId);
+        await Db.KeyDeleteAsync(key);
+
+        var filter = Builders<LeaderboardPlayer>.Filter.Eq(x => x.Id.LeaderboardId, boardId);
+
+
+        const int mongoBatchSize = 5_000;
+        const int redisChunkSize = 2_000;
+
+        var options = new FindOptions<LeaderboardPlayer, PlayerLeaderboardRankDto>
+        {
+            BatchSize = mongoBatchSize,
+            Projection = Builders<LeaderboardPlayer>.Projection.Expression(
+                x =>  new PlayerLeaderboardRankDto() { PlayerId = x.Id.PlayerId, Rating = x.Rating}
+            )
+        };
+
+        using var cursor = await _leaderboardPlayers.FindAsync(filter, options, ct);
+
+        var buffer = new List<(Guid PlayerId, double Rating)>(redisChunkSize);
+
+        while (await cursor.MoveNextAsync(ct))
+        {
+            foreach (var doc in cursor.Current)
+            {
+                buffer.Add((doc.PlayerId, doc.Rating));
+
+                if (buffer.Count >= redisChunkSize)
+                {
+                    await FlushToRedisAsync(key, buffer);
+                    buffer.Clear();
+                }
+            }
+        }
+
+        if (buffer.Count > 0)
+        {
+            await FlushToRedisAsync(key, buffer);
+            buffer.Clear();
+        }
+    }
+
+    private async Task FlushToRedisAsync(RedisKey key, List<(Guid PlayerId, double Rating)> items)
+    {
+        var batch = Db.CreateBatch();
+        var tasks = new Task[items.Count];
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            var (playerId, rating) = items[i];
+            tasks[i] = batch.SortedSetAddAsync(key, playerId.ToString("N"), rating);
+        }
+
+        batch.Execute();
+        await Task.WhenAll(tasks);
+    }
 }
+

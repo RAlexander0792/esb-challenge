@@ -1,5 +1,5 @@
 ## High-level system design and data flow
-
+Sequence diagram for Match flow available at [docs\match_flow.svg](match_flow.svg)
 
 ## Data model for players, matches, and rankings
 Class diagram available at [docs\class-diagram.svg](class-diagram.svg)
